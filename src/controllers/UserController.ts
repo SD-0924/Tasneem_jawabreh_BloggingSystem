@@ -42,42 +42,42 @@ export const getUserById = (req: Request, res: Response) => {
 };
 
 export const updateUser = (req: Request, res: Response) => {
-    const { userId } = req.params;
-  
-    User.update(
-      {
-        userName: req.body.userName,
-        password: req.body.password,
-        email: req.body.email,
-      },
-      {
-        where: { userID: userId },
+  const { userId } = req.params;
+
+  User.update(
+    {
+      userName: req.body.userName,
+      password: req.body.password,
+      email: req.body.email,
+    },
+    {
+      where: { userID: userId },
+    }
+  )
+    .then(([affectedCount]) => {
+      if (affectedCount > 0) {
+        // Fetch the updated user to respond with the latest data
+        return User.findByPk(userId);
+      } else {
+        throw new Error('UserNotFound');
       }
-    )
-      .then(([affectedCount]) => {
-        if (affectedCount > 0) {
-          // Fetch the updated user to respond with the latest data
-          return User.findByPk(userId);
-        } else {
-          throw new Error('UserNotFound');
-        }
-      })
-      .then((updatedUser) => {
-        if (updatedUser) {
-          res.status(200).json(updatedUser);
-        } else {
-          res.status(404).json({ error: 'User not found' });
-        }
-      })
-      .catch((error) => {
-        if (error.message === 'UserNotFound') {
-          res.status(404).json({ error: 'User not found' });
-        } else {
-          res.status(500).json({ error: 'Failed to update user' });
-        }
-      });
-  };
-  
+    })
+    .then((updatedUser) => {
+      if (updatedUser) {
+        res.status(200).json(updatedUser);
+      } else {
+        res.status(404).json({ error: 'User not found' });
+      }
+    })
+    .catch((error) => {
+      if (error.message === 'UserNotFound') {
+        res.status(404).json({ error: 'User not found' });
+      } else {
+        res.status(500).json({ error: 'Failed to update user' });
+      }
+    });
+};
+
 
 export const deleteUser = (req: Request, res: Response) => {
   const { userId } = req.params;

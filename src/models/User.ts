@@ -1,6 +1,6 @@
 import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';  // Import your sequelize instance
-
+import Post from './Post';
 // Define the interface for the User model
 interface UserAttributes {
   userID: number;
@@ -60,5 +60,8 @@ User.init(
     timestamps: true,
   }
 );
-
+/*User.hasMany(Post, {
+  foreignKey: 'userID', 
+  as: 'posts', 
+});*/
 export default User;

@@ -1,30 +1,114 @@
 import { Request, Response } from 'express';
-// import Post and related models here
+import Post from '../models/Post';
+import Category from '../models/Category';
+import Comment from '../models/Comment';
+import User from '../models/User';
 
-export const createPost = async (req: Request, res: Response) => {
-    // logic for creating a post
+export const createPost = (req: Request, res: Response) => {
+    const { title, content, userID } = req.body;
+    console.log("Request Body:", req.body);
+    Post.create({ title, content, userID })
+        .then((post) => {
+            res.status(201).json(post); 
+        })
+        .catch((error) => {
+            console.error('Error creating post:', error);  // Log the error for debugging
+      res.status(500).json({ error: 'Failed to create post', details: error.message });
+        });
 };
 
-export const getPosts = async (req: Request, res: Response) => {
-    // logic for retrieving all posts with associations
+export const getPosts = (req: Request, res: Response) => {
+   console.log("gggggg");
+  };
+  
+
+export const getPostById = (req: Request, res: Response) => {
+    const { postId } = req.params;
+
+    Post.findByPk(postId, {
+        include: [
+            { model: Category, as: 'categories', through: { attributes: [] } },
+            { model: Comment, as: 'comments', include: [{ model: User, as: 'user', attributes: ['userName'] }] },
+            { model: User, as: 'user', attributes: ['userName'] }
+        ],
+    })
+        .then((post) => {
+            if (post) {
+                res.status(200).json(post); // Respond with the post if found
+            } else {
+                res.status(404).json({ error: 'Post not found' });
+            }
+        })
+        .catch((error) => {
+            res.status(500).json({ error: 'Failed to retrieve post' });
+        });
 };
 
-export const getPostById = async (req: Request, res: Response) => {
-    // logic for retrieving a post by ID
+export const updatePost = (req: Request, res: Response) => {
+    const { postId } = req.params;
+    const { title, content } = req.body;
+
+    Post.update({ title, content }, { where: { postID: postId } })
+        .then(([updatedRowsCount]) => {
+            if (updatedRowsCount > 0) {
+                // Fetch the updated post to respond with the latest data
+                return Post.findByPk(postId);
+            } else {
+                throw new Error('PostNotFound');
+            }
+        })
+        .then((updatedPost) => {
+            if (updatedPost) {
+                res.status(200).json(updatedPost); // Respond with the updated post
+            } else {
+                res.status(404).json({ error: 'Post not found' });
+            }
+        })
+        .catch((error) => {
+            if (error.message === 'PostNotFound') {
+                res.status(404).json({ error: 'Post not found' });
+            } else {
+                res.status(500).json({ error: 'Failed to update post' });
+            }
+        });
 };
 
-export const updatePost = async (req: Request, res: Response) => {
-    // logic for updating a post
+export const deletePost = (req: Request, res: Response) => {
+    const { postId } = req.params;
+
+    Post.destroy({ where: { postID: postId } })
+        .then((deletedCount) => {
+            if (deletedCount > 0) {
+                res.status(204).send(); // Respond with no content after deletion
+            } else {
+                res.status(404).json({ error: 'Post not found' });
+            }
+        })
+        .catch((error) => {
+            res.status(500).json({ error: 'Failed to delete post' });
+        });
 };
 
-export const deletePost = async (req: Request, res: Response) => {
-    // logic for deleting a post
-};
+export const addCommentToPost = (req: Request, res: Response) => {
+    const { postId } = req.params;
+    const { userId, content } = req.body;
 
-export const addCategoryToPost = async (req: Request, res: Response) => {
-    // logic for adding a category to a post
-};
-
-export const addCommentToPost = async (req: Request, res: Response) => {
-    // logic for adding a comment to a post
+    Post.findByPk(postId)
+        .then((post) => {
+            if (post) {
+                return Comment.create({ postId, userId, content });
+            } else {
+                throw new Error('PostNotFound');
+            }
+        })
+        .then((comment) => {
+            res.status(201).json(comment); // Respond with the created comment
+        })
+        .catch((error) => {
+            if (error.message === 'PostNotFound') {
+                res.status(404).json({ error: 'Post not found' });
+            } else {
+                res.status(500).json({ error: 'Failed to add comment to post' });
+            }
+        });
 };
