@@ -18,7 +18,22 @@ export const createPost = (req: Request, res: Response) => {
 };
 
 export const getPosts = (req: Request, res: Response) => {
-   console.log("gggggg");
+    Post.findAll({
+        include: [
+          {
+            model: User,
+            as: 'user', // Make sure 'user' is the alias you used in the model association
+            attributes: ['userName'], // Only retrieve the 'userName' attribute from the User model
+          },
+        ],
+      })
+        .then((posts) => {
+          res.status(200).json(posts); // Respond with all posts, including user details
+        })
+        .catch((error) => {
+          console.error(error); // Log the error for better debugging
+          res.status(500).json({ error: 'Failed to retrieve posts' });
+        });
   };
   
 
@@ -27,10 +42,12 @@ export const getPostById = (req: Request, res: Response) => {
 
     Post.findByPk(postId, {
         include: [
-            { model: Category, as: 'categories', through: { attributes: [] } },
-            { model: Comment, as: 'comments', include: [{ model: User, as: 'user', attributes: ['userName'] }] },
-            { model: User, as: 'user', attributes: ['userName'] }
-        ],
+            {
+              model: User,
+              as: 'user', // Make sure 'user' is the alias you used in the model association
+              attributes: ['userName'], // Only retrieve the 'userName' attribute from the User model
+            },
+          ],
     })
         .then((post) => {
             if (post) {
