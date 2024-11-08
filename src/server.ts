@@ -18,10 +18,13 @@ app.use('/api/posts', postRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/comments', commentRoutes);
 
-sequelize.sync({ force: false })  // Set force: true to drop and recreate tables (use cautiously)
+/*sequelize.sync({ force: false })  // Set force: true to drop and recreate tables (use cautiously)
   .then(() => {
     console.log('Database and tables have been created.');
   })
   .catch((err) => {
     console.error('Error syncing models:', err);
+  });*/
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
   });

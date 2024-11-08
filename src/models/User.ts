@@ -1,22 +1,42 @@
-// src/models/User.ts
+import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
+import sequelize from '../config/database';  // Import your sequelize instance
 
-import { DataTypes, Model } from 'sequelize';
-import {sequelize} from '../config/database';
-
-class User extends Model {
-  public id!: number;
-  public name!: string;
-  public email!: string;
+// Define the interface for the User model
+interface UserAttributes {
+  userID: number;
+  userName: string;
+  password: string;
+  email: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
+// Define the interface for creating a user (optional properties for creation)
+interface UserCreationAttributes extends Optional<UserAttributes, 'userID'> {}
+
+// Create the User model
+class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
+  public userID!: number;
+  public userName!: string;
+  public password!: string;
+  public email!: string;
+  public createdAt!: Date;
+  public updatedAt!: Date;
+}
+
+// Initialize the model
 User.init(
   {
-    id: {
+    userID: {
       type: DataTypes.INTEGER,
-      autoIncrement: true,
       primaryKey: true,
+      autoIncrement: true,
     },
-    name: {
+    userName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    password: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -25,11 +45,19 @@ User.init(
       allowNull: false,
       unique: true,
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
-    sequelize,
-    modelName: 'User',
-    tableName: 'users',
+    sequelize,  // Sequelize instance
+    tableName: 'user',
+    timestamps: true,
   }
 );
 

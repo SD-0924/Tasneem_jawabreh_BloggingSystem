@@ -1,7 +1,7 @@
 // src/models/Category.ts
 
 import { DataTypes, Model } from 'sequelize';
-import {sequelize} from '../config/database';
+import sequelize from '../config/database';  
 
 class Category extends Model {
   public id!: number;

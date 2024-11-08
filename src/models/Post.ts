@@ -1,7 +1,7 @@
 // src/models/Post.ts
 
 import { DataTypes, Model } from 'sequelize';
-import {sequelize} from '../config/database';
+import sequelize from '../config/database';  
 import User from './User';
 
 class Post extends Model {

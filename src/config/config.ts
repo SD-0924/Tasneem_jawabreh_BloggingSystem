@@ -10,7 +10,7 @@ const sequelize = new Sequelize('blogging_system', 'root', '', {
 export default sequelize;
 
 // User Model
-export const User = sequelize.define(
+/*export const User = sequelize.define(
   "user",
   {
     userID: {
@@ -137,4 +137,4 @@ Comment.belongsTo(Post, { foreignKey: 'postId' });
 // User-Comment Relationship (One-to-Many)
 User.hasMany(Comment, { foreignKey: 'userId' });
 Comment.belongsTo(User, { foreignKey: 'userId' });
-
+*/
