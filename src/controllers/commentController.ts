@@ -1,22 +1,93 @@
 import { Request, Response } from 'express';
-// import Comment model here
+import Comment from '../models/Comment'; // Import Comment model
+import User from '../models/User'; // Import User model (if needed for associations)
+import Post from '../models/Post'; // Import Post model (if needed for associations)
 
-export const createComment = async (req: Request, res: Response) => {
-    // logic for creating a comment
+// Create a new comment
+export const createComment = (req: Request, res: Response): void => {
+    const { content, userID, postID } = req.body;
+
+    // Validate request data
+    if (!content || !userID || !postID) {
+        res.status(400).json({ error: 'Missing required fields' });
+        return;
+    }
+
+    Comment.create({ content, userID, postID })
+        .then(comment => {
+            res.status(201).json(comment);
+            return; // Ensure void is returned
+        })
+        .catch(error => {
+            console.error('Error creating comment:', error);
+            res.status(500).json({ error: 'Failed to create comment' });
+        });
 };
 
-export const getComments = async (req: Request, res: Response) => {
-    // logic for retrieving all comments
+// Retrieve all comments
+export const getComments = (req: Request, res: Response): void => {
+    Comment.findAll({
+        include: [
+            { model: User, as: 'user', attributes: ['userName'] },
+            { model: Post, as: 'post', attributes: ['title'] }
+        ],
+    })
+        .then(comments => {
+            res.status(200).json(comments);
+            return; // Ensure void is returned
+        })
+        .catch(error => {
+            console.error('Error retrieving comments:', error);
+            res.status(500).json({ error: 'Failed to retrieve comments' });
+        });
 };
 
-export const getCommentById = async (req: Request, res: Response) => {
-    // logic for retrieving a comment by ID
+// Retrieve a comment by ID
+export const getCommentById = (req: Request, res: Response): void => {
+    const { commentID } = req.params;
+
+    Comment.findByPk(commentID, {
+        include: [
+            { model: User, as: 'user', attributes: ['userName'] },
+            { model: Post, as: 'post', attributes: ['title'] }
+        ],
+    })
+        .then(comments => {
+            if (!comments) {
+                res.status(404).json({ error: 'Comment not found' });
+                return;
+            }
+            res.status(200).json(comments);
+        })
+        .catch(error => {
+            console.error('Error retrieving comment:', error);
+            res.status(500).json({ error: 'Failed to retrieve comment' });
+        });
 };
 
-export const updateComment = async (req: Request, res: Response) => {
-    // logic for updating a comment
+// Update a comment by ID
+export const updateComment = (req: Request, res: Response): void => {
+    const { commentID } = req.params;
+    const { content } = req.body;
+
+    Comment.findByPk(commentID)
+        .then(comment => {
+            if (!comment) {
+                res.status(404).json({ error: 'Comment not found' });
+                return;
+            }
+
+            comment.content = content || comment.content;
+            return comment.save();
+        })
+        .then(updatedComment => {
+            if (updatedComment) {
+                res.status(200).json(updatedComment);
+            }
+        })
+        .catch(error => {
+            console.error('Error updating comment:', error);
+            res.status(500).json({ error: 'Failed to update comment' });
+        });
 };
 
-export const deleteComment = async (req: Request, res: Response) => {
-    // logic for deleting a comment
-};

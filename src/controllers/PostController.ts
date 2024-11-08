@@ -106,14 +106,14 @@ export const deletePost = (req: Request, res: Response) => {
         });
 };
 
-export const addCommentToPost = (req: Request, res: Response) => {
+/*export const addCommentToPost = (req: Request, res: Response) => {
     const { postId } = req.params;
     const { userId, content } = req.body;
 
     Post.findByPk(postId)
         .then((post) => {
             if (post) {
-                return Comment.create({ postId, userId, content });
+                return Comment.create({ postID, userID, content });
             } else {
                 throw new Error('PostNotFound');
             }
@@ -128,4 +128,4 @@ export const addCommentToPost = (req: Request, res: Response) => {
                 res.status(500).json({ error: 'Failed to add comment to post' });
             }
         });
-};
+};*/
