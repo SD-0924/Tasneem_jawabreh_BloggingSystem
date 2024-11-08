@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for models/User.ts</title>
+    <title>Code coverage report for models/Post.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">models</a> User.ts</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">models</a> Post.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
@@ -123,15 +123,9 @@
 <a name='L58'></a><a href='#L58'>58</a>
 <a name='L59'></a><a href='#L59'>59</a>
 <a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a>
-<a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a>
-<a name='L65'></a><a href='#L65'>65</a>
-<a name='L66'></a><a href='#L66'>66</a>
-<a name='L67'></a><a href='#L67'>67</a>
-<a name='L68'></a><a href='#L68'>68</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<a name='L61'></a><a href='#L61'>61</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -157,7 +151,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -186,84 +180,69 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';  // Import your sequelize instance
-import Post from './Post';
-// Define the interface for the User model
-interface UserAttributes {
+import User from './User';  // Ensure you're importing the User model correctly
+&nbsp;
+// Define the interface for the Post model
+interface PostAttributes {
+  postID: number;
+  title: string;
+  content: string;
   userID: number;
-  userName: string;
-  password: string;
-  email: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
 &nbsp;
-// Define the interface for creating a user (optional properties for creation)
-interface UserCreationAttributes extends Optional&lt;UserAttributes, 'userID'&gt; {}
+// Define the interface for creating a post (optional properties for creation)
+interface PostCreationAttributes extends Optional&lt;PostAttributes, 'postID'&gt; {}
 &nbsp;
-// Create the User model
-class User extends Model&lt;UserAttributes, UserCreationAttributes&gt; implements UserAttributes {
+// Create the Post model
+class Post extends Model&lt;PostAttributes, PostCreationAttributes&gt; implements PostAttributes {
+  public postID!: number;
+  public title!: string;
+  public content!: string;
   public userID!: number;
-  public userName!: string;
-  public password!: string;
-  public email!: string;
   public createdAt!: Date;
   public updatedAt!: Date;
 }
 &nbsp;
 // Initialize the model
-User.init(
+Post.init(
   {
+    postID: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    content: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
     userID: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    userName: {
-      type: DataTypes.STRING,
       allowNull: false,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
     },
   },
   {
     sequelize,  // Sequelize instance
-    tableName: 'user',
-    timestamps: true,
+    modelName: 'Post',
+    tableName: 'post',
+    timestamps: true,  // Automatically manage createdAt and updatedAt
   }
 );
-/*User.hasMany(Post, {
-  foreignKey: 'userID', 
-  as: 'posts', 
-});*/
-export default User;
+&nbsp;
+// Relationship: Post belongs to User
+Post.belongsTo(User, { foreignKey: 'userID', as: 'user' });
+&nbsp;
+export default Post;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
