@@ -62,6 +62,7 @@ export const getPostById = (req: Request, res: Response) => {
 };
 
 export const updatePost = (req: Request, res: Response) => {
+    console.log("Controller function called");
     const { postId } = req.params;
     const { title, content } = req.body;
 

@@ -63,6 +63,44 @@ describe('Post Controller', () => {
     });
   });
 
+  /*describe('updatePost', () => {
+    it('should update a post and return 200', async () => {
+        const mockUpdatedPost = {
+          postID: 1,
+          title: 'Updated Post Title',
+          content: 'This is the updated content of the post.',
+        };
+    
+        // Mock Post.update to simulate a successful update with 1 affected row
+        (Post.update as jest.Mock).mockResolvedValue([1]);
+        // Mock Post.findByPk to simulate fetching the updated post
+        (Post.findByPk as jest.Mock).mockResolvedValue(mockUpdatedPost);
+    
+       req.params = { postId: '1' }; 
+        req.body = { title: 'Updated Post Title', content: 'This is the updated content of the post.' };
+    
+        await updatePost(req as Request, res as Response);
+    
+        // Check that Post.update was called with the expected arguments
+        expect(Post.update).toHaveBeenCalledWith(
+          { title: 'Updated Post Title', content: 'This is the updated content of the post.' },
+          { where: { postID: '1' } }  
+        );
+
+        await updatePost(req as Request, res as Response);
+        // Check that Post.findByPk was called to retrieve the updated post
+        expect(Post.findByPk).toHaveBeenCalledWith('1');
+    
+        // Check that the response status is 200 and response JSON contains the updated post
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith(mockUpdatedPost);
+      });
+  
+
+  });*/
+  
+  
+  
 
 
 });
