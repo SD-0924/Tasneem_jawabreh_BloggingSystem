@@ -29,6 +29,11 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/my-app:latest
 
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Deploy Docker Container
         run: |
-          ssh user@your-server-ip "docker pull ${{ secrets.DOCKER_USERNAME }}/my-app:latest && docker run -d -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/my-app:latest"
+          ssh -o StrictHostKeyChecking=no user@<your-server-ip> "docker pull ${{ secrets.DOCKER_USERNAME }}/my-app:latest && docker run -d -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/my-app:latest"
