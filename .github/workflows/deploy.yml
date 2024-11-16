@@ -33,7 +33,3 @@ jobs:
           push: true # Push the built image to Docker Hub
           tags: ${{ secrets.DOCKER_USERNAME }}/my-app:latest # Tag the image with your Docker Hub username
 
-      # 6. Pull and Run Docker Image on your server
-      - name: Deploy Docker Container
-        run: |
-          ssh -o StrictHostKeyChecking=no user@your-server-ip "docker pull ${{ secrets.DOCKER_USERNAME }}/my-app:latest && docker run -d -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/my-app:latest"
