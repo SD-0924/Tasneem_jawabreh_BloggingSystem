@@ -1,4 +1,5 @@
 import express from 'express';
+import passport from './config/passportConfig';
 import userRoutes from './routes/userRoutes';
 import postRoutes from './routes/postRoutes';
 import categoryRoutes from './routes/categoryRoutes';
@@ -8,11 +9,12 @@ import Post from './models/Post';
 import Category from './models/Category';
 import Comment from './models/Comment';
 import sequelize from './config/config';
+require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-
+app.use(passport.initialize());
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/categories', categoryRoutes);

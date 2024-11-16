@@ -1,12 +1,21 @@
 {
   "compilerOptions": {
-    "rootDir": "./src",
+    "rootDir": "./src", // Keeps your source code organized
     "outDir": "./dist",
     "module": "commonjs",
     "target": "es6",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "typeRoots": ["./node_modules/@types", "./src/@types"],
+    "baseUrl": "./",
+    "paths": {
+      "*": ["node_modules/*", "src/types/*"]
+    }
   },
-  "include": ["src"]
+  "include": [
+    "src/**/*.ts",
+    "src/@types/**/*.d.ts",
+    "./server.ts" // Include files outside the src directory
+  ]
 }

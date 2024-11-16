@@ -1,15 +1,22 @@
 import { Request, Response } from 'express';
 import User from '../models/User';  
+import jwt from 'jsonwebtoken';
+import  AuthenticatedRequest  from '../@types/AuthenticatedRequest'; // Custom type for authenticated requests
 
+// Middleware to authenticate using Passport JWT
+import passport from 'passport';
 export const createUser = (req: Request, res: Response) => {
-    console.log("Request Body:", req.body);
+  console.log('Request Body:', req.body);
   User.create({
     userName: req.body.userName,
     password: req.body.password,
     email: req.body.email,
   })
     .then((user) => {
-      res.status(201).json(user);  // Respond with the created user
+      const payload = { id: user.userID, userName: user.userName }; // Payload for JWT
+      const token = jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: '1d' }); // Generate JWT
+      console.log(token);
+      res.status(201).json({ user, token }); // Respond with user and JWT
     })
     .catch((error) => {
       res.status(500).json({ error: 'Failed to create user' });
@@ -26,7 +33,7 @@ export const getUsers = (req: Request, res: Response) => {
     });
 };
 
-export const getUserById = (req: Request, res: Response) => {
+export const getUserById = (req: AuthenticatedRequest, res: Response) => {
   const { userId } = req.params;
   User.findByPk(userId)
     .then((user) => {
