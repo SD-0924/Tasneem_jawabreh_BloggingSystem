@@ -33,12 +33,6 @@ jobs:
           push: true # Push the built image to Docker Hub
           tags: ${{ secrets.DOCKER_USERNAME }}/my-app:latest # Tag the image with your Docker Hub username
 
-      # 5. Set up SSH key for deploying to your server
-      - name: Set up SSH key
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
       # 6. Pull and Run Docker Image on your server
       - name: Deploy Docker Container
         run: |
