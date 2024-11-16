@@ -3,8 +3,12 @@ import Post from '../models/Post';
 import Category from '../models/Category';
 import Comment from '../models/Comment';
 import User from '../models/User';
+import jwt from 'jsonwebtoken';
+import  AuthenticatedRequest  from '../@types/AuthenticatedRequest'; // Custom type for authenticated requests
 
-export const createPost = (req: Request, res: Response) => {
+// Middleware to authenticate using Passport JWT
+import passport from 'passport';
+export const createPost = (req: AuthenticatedRequest, res: Response) => {
     const { title, content, userID } = req.body;
     console.log("Request Body:", req.body);
     Post.create({ title, content, userID })
@@ -17,7 +21,7 @@ export const createPost = (req: Request, res: Response) => {
         });
 };
 
-export const getPosts = (req: Request, res: Response) => {
+export const getPosts = (req: AuthenticatedRequest, res: Response) => {
     Post.findAll({
         include: [
           {
@@ -37,7 +41,7 @@ export const getPosts = (req: Request, res: Response) => {
   };
   
 
-export const getPostById = (req: Request, res: Response) => {
+export const getPostById = (req: AuthenticatedRequest, res: Response) => {
     const { postId } = req.params;
 
     Post.findByPk(postId, {
@@ -61,7 +65,7 @@ export const getPostById = (req: Request, res: Response) => {
         });
 };
 
-export const updatePost = (req: Request, res: Response) => {
+export const updatePost = (req: AuthenticatedRequest, res: Response) => {
     console.log("Controller function called");
     const { postId } = req.params;
     const { title, content } = req.body;
@@ -91,7 +95,7 @@ export const updatePost = (req: Request, res: Response) => {
         });
 };
 
-export const deletePost = (req: Request, res: Response) => {
+export const deletePost = (req: AuthenticatedRequest, res: Response) => {
     const { postId } = req.params;
 
     Post.destroy({ where: { postID: postId } })

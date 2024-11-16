@@ -48,9 +48,10 @@ export const getUserById = (req: AuthenticatedRequest, res: Response) => {
     });
 };
 
-export const updateUser = (req: Request, res: Response) => {
+export const updateUser = (req: AuthenticatedRequest, res: Response) => {
   const { userId } = req.params;
 
+  // First, update the user with the provided data
   User.update(
     {
       userName: req.body.userName,
@@ -66,24 +67,23 @@ export const updateUser = (req: Request, res: Response) => {
         // Fetch the updated user to respond with the latest data
         return User.findByPk(userId);
       } else {
-        throw new Error('UserNotFound');
+        // If no rows were affected, treat it as the user not being found
+        return null;
       }
     })
     .then((updatedUser) => {
       if (updatedUser) {
-        res.status(200).json(updatedUser);
+        res.status(200).json(updatedUser); // Respond with the updated user
       } else {
-        res.status(404).json({ error: 'User not found' });
+        res.status(404).json({ error: 'User not found' }); // No user found to update
       }
     })
     .catch((error) => {
-      if (error.message === 'UserNotFound') {
-        res.status(404).json({ error: 'User not found' });
-      } else {
-        res.status(500).json({ error: 'Failed to update user' });
-      }
+      console.error('Error updating user:', error);
+      res.status(500).json({ error: 'Failed to update user' }); // Handle unexpected errors
     });
 };
+
 
 
 export const deleteUser = (req: Request, res: Response) => {
