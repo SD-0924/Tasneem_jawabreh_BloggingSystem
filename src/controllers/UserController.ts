@@ -37,9 +37,12 @@ export const getUserById = (req: AuthenticatedRequest, res: Response) => {
   const { userId } = req.params;
   User.findByPk(userId)
     .then((user) => {
-      if (user) {
+   if (req.user.userID == parseInt(userId, 10)) {
         res.status(200).json(user);  // Respond with the user if found
-      } else {
+      } else  if (req.user.userID !== parseInt(userId, 10)) {
+        res.status(403).json({ error: 'Unauthorized access' });
+      }
+      else{
         res.status(404).json({ error: 'User not found' });
       }
     })

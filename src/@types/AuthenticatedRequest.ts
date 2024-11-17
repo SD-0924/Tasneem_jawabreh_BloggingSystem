@@ -2,7 +2,7 @@ import { Request } from 'express';
 
 // Define the type of the user object in the request
 interface AuthenticatedUser {
-  id: number;
+  userID: number;
   // Add more user properties if needed
 }
 

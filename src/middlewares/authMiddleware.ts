@@ -12,7 +12,7 @@ export const authorize = (
   const userId = req.params.userId;
   const authenticatedUser = req.user; // Now TypeScript knows `user` exists on `req`
 
-  if (authenticatedUser.id !== parseInt(userId)) {
+  if (authenticatedUser.userID !== parseInt(userId)) {
     return res.status(403).json({ error: 'Unauthorized access' });
   }
 
